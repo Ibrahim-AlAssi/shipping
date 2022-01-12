@@ -1,0 +1,78 @@
+
+
+
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+
+
+
+
+# type Mutation{
+#     createUser(
+#         name: String!,
+#         email:String! @rules(apply:["email","unique:users"]) ,
+#         password:String! @rules(apply:["min:8"])
+#     ):Users! @create
+
+#     # editUser(id:ID!,):Users @update
+
+#     # delete(id:ID!):modename @delete 
+# }
+
+
+
+
+
+
+
+ type Query {
+   me:User @auth   @guard #show userlogin deltail
+  myShipments: [Shipment!]! @all @whereAuth(relation:"user") @guard #show userlogin deltail shipment
+  shipment(id:ID! @eq): Shipment! @find @whereAuth(relation:"user") @guard
+
+
+            }
+type Mutation{
+    
+    createShipment(  
+
+     
+        waybill:String!,
+        address:String!,
+        name: String!,
+        phone: String!   
+    ):Shipment! @create @guard
+
+
+
+    updateShipment( 
+        id:ID!,
+        waybill:String!,
+        address:String!,
+        name: String!,
+        phone: String!
+        email: String): Shipment! @update @guard
+
+
+
+     deleteShipment(id: ID!): Shipment @delete @guard
+
+}
+
+
+type Shipment {
+    id: ID!
+    user_id: User @belongsTo 
+    waybill: String!
+    address: String!
+    name: String!
+    phone: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+#import sanctum.graphql
